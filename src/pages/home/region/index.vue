@@ -2,9 +2,9 @@
     <div class="region">
         <div class="left">地区:</div>
         <ul class="right">
-            <li :class="{ active: RegionFlag === '' }" @click="RegionFlag = ''">全部</li>
+            <li :class="{ active: RegionFlag === '' }" @click="changeRegion('')">全部</li>
             <li v-for="region in regionArr" :key="region.value" :class="{ active: RegionFlag === region.value }"
-                @click="RegionFlag = region.value">{{ region.name }}</li>
+                @click="changeRegion(region.value)">{{ region.name }}</li>
         </ul>
     </div>
 </template>
@@ -28,6 +28,13 @@ const getRegion = async () => {
         regionArr.value = result.data
     }
 }
+const changeRegion = (region: string) => {
+    RegionFlag.value = region
+    $emit('getRegion', region)
+}
+
+//接收该组件被绑定的自定义事件
+let $emit = defineEmits(['getRegion'])
 </script>
 
 <script lang="ts">

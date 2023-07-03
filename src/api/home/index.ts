@@ -8,6 +8,6 @@ enum API {
     HOSPITALLEVELANDREGION_URL = '/cmn/dict/findByDictCode/'
 }
 // 获取医院数据的发送请求的方法(执行发送操作并返回接收的结果)
-export const reqHospital = (page: number, limit: number) => request.get<any, HospitalResponseData>(API.HOSPITAL_URL + page + '/' + limit)
+export const reqHospital = (page: number, limit: number, hostype = '', districtCode = '') => request.get<any, HospitalResponseData>(API.HOSPITAL_URL + `${page}/${limit}?hostype=${hostype}&districtCode=${districtCode}`)
 // 发送请求，获取医院的等级或者医院地区的数据
 export const reqHospitalLevelAndRegion = (dictCode: string) => request.get<any, HospitalaLevelAndRegionResponseData>(API.HOSPITALLEVELANDREGION_URL + dictCode)

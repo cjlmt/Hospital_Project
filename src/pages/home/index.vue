@@ -8,13 +8,14 @@
     <el-row :gutter="20">
       <el-col :span="20">
         <!-- 等级子组件 -->
-        <Level></Level>
+        <Level @getLevel="getLevel"></Level>
         <!-- 等级子组件 -->
-        <Region></Region>
+        <Region @getRegion="getRegion"></Region>
         <!-- 卡片组件 -->
-        <div class="card-container">
+        <div class="card-container" v-if="hasHospitalArr.length > 0">
           <Card v-for="(item, index) in hasHospitalArr" :key="index" class="card" :hospitalInfo="item"></Card>
         </div>
+        <el-empty discription="暂无数据" v-else />
         <el-pagination v-model:current-page="pageNo" v-model:page-size="pageSize" :page-sizes="[4, 6, 10, 20]"
           :background=true layout="total, sizes, prev, pager, ->,next, jumper" :total="total" @size-change="sizeChange"
           @current-change="currentChange" class="pagination" />
@@ -49,6 +50,10 @@ import { reqHospital } from "@/api/home";
 let hasHospitalArr = ref<Content>([])
 // 存储医院总个数
 let total = ref<number>(0)
+// 存储等级组件传送的等级数据，用于home筛选医院
+let hostype = ref<string>('')
+// 存储地区组件传送的地区数据，用于home筛选医院
+let districtCode = ref<string>('')
 //情况一：发送请求
 onMounted(() => {
   getHospitalInfo()
@@ -66,7 +71,7 @@ const sizeChange = () => {
 }
 // 将获取所有医院数据的请求封装为一个函数，因为要多次请求，省的每次都传相同的参数和判断
 const getHospitalInfo = async () => {
-  let result: HospitalResponseData = await reqHospital(pageNo.value, pageSize.value)
+  let result: HospitalResponseData = await reqHospital(pageNo.value, pageSize.value, hostype.value, districtCode.value)
   // if (result.code == 200) {
   //注意ref定义的响应式数据要赋值到value属性中
   // 存储已有医院的数据
@@ -74,6 +79,21 @@ const getHospitalInfo = async () => {
   total.value = result.data.totalElements
   // }
 }
+
+//getRegion自定义事件的回调函数
+const getRegion = (region: string) => {
+  districtCode.value = region
+  // 重新发送请求
+  getHospitalInfo()
+}
+
+//getLevel自定义事件的回调函数
+const getLevel = (level: string) => {
+  hostype.value = level
+  // 重新发送请求
+  getHospitalInfo()
+}
+
 </script>
 
 <style scoped lang="scss">

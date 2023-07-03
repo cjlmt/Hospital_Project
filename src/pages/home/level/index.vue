@@ -6,9 +6,9 @@
                 等级:
             </div>
             <ul class="right">
-                <li :class="{ active: activeFlag === '' }" @click="activeFlag = ''">全部</li>
+                <li :class="{ active: activeFlag === '' }" @click="changeLevel('')">全部</li>
                 <li v-for="item in levelArr" :key="item.id" :class="{ active: activeFlag === item.value }"
-                    @click="activeFlag = item.value">{{ item.name }}</li>
+                    @click="changeLevel(item.value)">{{ item.name }}</li>
             </ul>
         </div>
     </div>
@@ -33,6 +33,13 @@ const getLevel = async () => {
         levelArr.value = result.data
     }
 }
+
+//触发自定义事件
+const changeLevel = (region: string) => {
+    activeFlag.value = region
+    $emit('getLevel', region)
+}
+let $emit = defineEmits(['getLevel'])
 </script>
 
 <script lang="ts">
