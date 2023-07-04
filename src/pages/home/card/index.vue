@@ -1,5 +1,5 @@
 <template>
-    <el-card shadow="hover">
+    <el-card shadow="hover" @click="goDetail">
         <div class="content">
             <div class="left">
                 <div class="name">
@@ -38,8 +38,17 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+//创建路由器对象
+let $router = useRouter()
 // 接收父组件传递过来的props->即为已有的医院的数据
-defineProps(['hospitalInfo'])
+let props = defineProps(['hospitalInfo'])
+// 点击卡片的回调函数
+const goDetail = () => {
+    $router.push({ path: '/hospital' })
+    console.log(props.hospitalInfo);
+
+}
 </script>
 
 <style scoped lang="scss">

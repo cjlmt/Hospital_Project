@@ -13,7 +13,8 @@
         <Region @getRegion="getRegion"></Region>
         <!-- 卡片组件 -->
         <div class="card-container" v-if="hasHospitalArr.length > 0">
-          <Card v-for="(item, index) in hasHospitalArr" :key="index" class="card" :hospitalInfo="item"></Card>
+          <Card v-for="(item, index) in hasHospitalArr" :key="index" class="card" :hospitalInfo="item">
+          </Card>
         </div>
         <el-empty discription="暂无数据" v-else />
         <el-pagination v-model:current-page="pageNo" v-model:page-size="pageSize" :page-sizes="[4, 6, 10, 20]"
@@ -93,7 +94,6 @@ const getLevel = (level: string) => {
   // 重新发送请求
   getHospitalInfo()
 }
-
 </script>
 
 <style scoped lang="scss">

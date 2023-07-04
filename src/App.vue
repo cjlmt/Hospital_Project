@@ -31,7 +31,7 @@ onMounted(() => {
   align-items: center;
 
   .content {
-    // height: 900px;
+    min-height: 700px;
     width: 1200px;
     margin-top: 70px;
   }

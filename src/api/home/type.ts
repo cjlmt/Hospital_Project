@@ -97,3 +97,8 @@ export type HospitalaLevelAndRegionArr = HospitalaLevelAndRegion[]
 export interface HospitalaLevelAndRegionResponseData extends ResponseData {
     data: HospitalaLevelAndRegionArr
 }
+
+// 定义获取通过关键字搜索获取的数据的ts类型
+export interface HospitalInfo extends ResponseData {
+    data: Content
+} 
