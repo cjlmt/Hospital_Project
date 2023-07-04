@@ -62,6 +62,10 @@ const goHome = () => {
       }
     }
 
+    .left:hover {
+      cursor: pointer;
+    }
+
     .right {
       display: flex;
       justify-content: center;
@@ -74,4 +78,5 @@ const goHome = () => {
       }
     }
   }
-}</style>
+}
+</style>
