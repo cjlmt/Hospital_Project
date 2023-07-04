@@ -65,9 +65,19 @@ let $router = useRouter()
 //创建当前路由对象
 // 获取当前路径，确定是那个路由组件从而确定是哪个导航项高亮
 let $route = useRoute()
+// 引入组合式API
+import { onMounted } from 'vue';
+// 引入发送请求的方法
+import { useDetailStore } from '../../store/modules/hospitalDetail'
+let detailStore = useDetailStore()
 const changeActive = (path: string) => {
   $router.push({ path: path })
 }
+onMounted(() => {
+  console.log($route.query.hoscode);
+  detailStore.getHospital($route.query.hoscode as any)
+  // detailStore.getHospital($route.query.hoscode);
+})
 </script>
 
 <style scoped lang="scss">

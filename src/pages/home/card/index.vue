@@ -45,7 +45,7 @@ let $router = useRouter()
 let props = defineProps(['hospitalInfo'])
 // 点击卡片的回调函数
 const goDetail = () => {
-    $router.push({ path: '/hospital/register' })
+    $router.push({ path: '/hospital/register', query: { hoscode: props.hospitalInfo.hoscode } })
     console.log(props.hospitalInfo);
 
 }

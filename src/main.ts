@@ -10,6 +10,8 @@ import App from '@/App.vue'
 import router from './router'
 // 引入element-plus插件
 import ElementPlus from 'element-plus'
+// 引入Pinia仓库插件
+import pinia from '@/store/index'
 // 引入国际化中文包
 // @ts-ignore
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
@@ -26,5 +28,7 @@ app.use(router)
 app.use(ElementPlus, {
     locale: zhCn
 })
+// 安装Pinia插件
+app.use(pinia)
 //挂载到页面上
 app.mount('#app')
