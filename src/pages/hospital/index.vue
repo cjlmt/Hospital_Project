@@ -1,9 +1,112 @@
 <template>
-  <div>我是医院详情</div>
+  <div class="hospital">
+    <!-- 左侧导航区 -->
+    <div class="menu">
+      <div class="top">
+        <el-icon>
+          <HomeFilled />
+        </el-icon>
+        <p>/ 医院信息</p>
+      </div>
+      <!-- 会自动取value -->
+      <el-menu :default-active="$route.path" class="el-menu-vertical-demo">
+        <el-menu-item index="/hospital/register" @click="changeActive('/hospital/register')">
+          <el-icon>
+            <Document />
+          </el-icon>
+          <span>预约挂号</span>
+        </el-menu-item>
+        <el-menu-item index="/hospital/detail" @click="changeActive('/hospital/detail')">
+          <el-icon>
+            <Location />
+          </el-icon>
+          <span>医院详情</span>
+        </el-menu-item>
+        <el-menu-item index="/hospital/notice" @click="changeActive('/hospital/notice')">
+          <el-icon>
+            <Setting />
+          </el-icon>
+          <span>预约须知</span>
+        </el-menu-item>
+        <el-menu-item index="/hospital/close" @click="changeActive('/hospital/close')">
+          <el-icon>
+            <InfoFilled />
+          </el-icon>
+          <span>停诊信息</span>
+        </el-menu-item>
+        <el-menu-item index="/hospital/search" @click="changeActive('/hospital/search')">
+          <el-icon>
+            <Search />
+          </el-icon>
+          <span>查询/取消</span>
+        </el-menu-item>
+      </el-menu>
+    </div>
+    <!-- 右侧路由组件展示区 -->
+    <div class="display">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import {
+  Document,
+  Location,
+  Setting,
+  Search,
+  InfoFilled,
+  HomeFilled
+} from '@element-plus/icons-vue'
+// 引入路由器创建函数
+import { useRouter, useRoute } from 'vue-router'
+//创建路由器对象
+let $router = useRouter()
+//创建当前路由对象
+// 获取当前路径，确定是那个路由组件从而确定是哪个导航项高亮
+let $route = useRoute()
+const changeActive = (path: string) => {
+  $router.push({ path: path })
+}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.hospital {
+  display: flex;
+
+  .menu {
+    flex: 2;
+
+    .top {
+      font-size: 13px;
+      color: gray;
+      margin: 20px 0 10px;
+      display: flex;
+      align-items: center;
+
+      p {
+        margin-left: 5px;
+      }
+    }
+
+    .list {
+      font-size: 14px;
+      color: black;
+
+      li {
+        display: flex;
+        align-items: center;
+
+        span {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  .display {
+    flex: 8;
+  }
+
+}
 </style>

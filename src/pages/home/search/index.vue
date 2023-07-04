@@ -32,7 +32,7 @@ const fetchData = async (keyword: string, cb: any) => {
 }
 // 点击建议项执行的回调
 const goDetail = (item: any) => {
-  $router.push({ path: '/hospital' })
+  $router.push({ path: '/hospital/register' })
   console.log(item);
 }
 </script>
