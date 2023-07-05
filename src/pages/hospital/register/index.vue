@@ -32,6 +32,31 @@
                 <p v-for="(item, index) in hospitalStore.hospitalInfo.bookingRule?.rule" :key="index">{{ item }}</p>
             </div>
         </div>
+        <!-- 医院科室模块 -->
+        <div class="department">
+            <!-- 左侧大科室导航 -->
+            <div class="leftNav">
+                <ul>
+                    <li v-for="(item, index) in hospitalStore.department" :key="item.depcode"
+                        :class="{ active: currentIndex === index }" @click="changeIndex(index)">{{ item.depname }}</li>
+                </ul>
+            </div>
+            <!-- 右侧所有的小科室数据 -->
+            <div class="departmentInfos">
+                <!-- 每一个小科室数据，根据大科室的data循环渲染 -->
+                <div class="departmentInfo" v-for="item in hospitalStore.department" :key="item.depcode">
+                    <!-- 大科室标题 -->
+                    <h1 class="cur">{{ item.depname }}</h1>
+                    <!-- 每一个大科室下的小科室，列表循环渲染 -->
+                    <ul>
+                        <!-- 直接使用大小科室的编码作为当前渲染项的key值 -->
+                        <li v-for="department in item.children" :key="department.depcode">
+                            {{ department.depname }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -40,6 +65,23 @@
 import { useDetailStore } from '@/store/modules/hospitalDetail'
 //获取仓库对象，也就是存储数据的state
 let hospitalStore = useDetailStore()
+import { ref } from 'vue'
+// 控制科室高亮的响应式数据
+let currentIndex = ref<number>(0)
+// 点击导航项的回调函数
+const changeIndex = (index: number) => {
+    currentIndex.value = index
+    // 点击导航获取右侧对应的大科室的H1标题
+    let allH1 = document.querySelectorAll('.cur')
+    // 滚动到对应科室的位置
+    allH1[index].scrollIntoView({
+        // 可以配置其他属性
+        // 过渡动画效果
+        behavior: 'smooth',
+        // 滚动到位置，默认起始位置
+        block: 'start'
+    })
+}
 </script>
 
 <style scoped lang="scss">
@@ -107,6 +149,78 @@ let hospitalStore = useDetailStore()
             p {
                 margin-bottom: 7px;
 
+            }
+        }
+    }
+
+    .department {
+        height: 500px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: flex;
+
+        .leftNav {
+            width: 80px;
+            height: 100%;
+            background-color: #f0f2f6;
+            font-size: 14px;
+
+            ul {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+
+                li {
+                    height: 40px;
+                    // flex: 1;
+                    line-height: 40px;
+                    color: gray;
+                    text-align: center;
+                }
+
+                li.active {
+                    border-left: 2px solid red;
+                    color: red;
+                    background-color: white;
+                }
+
+                li:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .departmentInfos {
+            margin-left: 20px;
+            flex: 1;
+            height: 100%;
+            overflow: auto;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .departmentInfo {
+                h1 {
+                    padding: 2px 0 2px 3px;
+                    background-color: #f0f2f6;
+                    color: gray;
+                }
+
+                ul {
+                    display: flex;
+                    flex-wrap: wrap;
+                    // justify-content: space-between;
+
+                    li {
+                        width: 33%;
+                        height: 25px;
+                        line-height: 25px;
+                        color: gray;
+                    }
+                }
             }
         }
     }

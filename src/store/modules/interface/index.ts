@@ -1,5 +1,6 @@
-import type { HospitalDetail } from "@/api/hospital/type";
+import type { HospitalDetail, DepartmentArr } from "@/api/hospital/type";
 //定义仓库内部存储数据的state的ts类型
 export interface DetailState {
-    hospitalInfo: HospitalDetail
+    hospitalInfo: HospitalDetail,
+    department: DepartmentArr
 }
