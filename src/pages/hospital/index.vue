@@ -71,10 +71,12 @@ import { onMounted } from 'vue';
 import { useDetailStore } from '../../store/modules/hospitalDetail'
 let detailStore = useDetailStore()
 const changeActive = (path: string) => {
-  $router.push({ path: path })
+  //参数！！！
+  $router.push({ path: path, query: { hoscode: $route.query.hoscode } })
 }
 onMounted(() => {
   console.log($route.query.hoscode);
+  // pinia发送请求将数据存在仓库中
   detailStore.getHospital($route.query.hoscode as any)
   // detailStore.getHospital($route.query.hoscode);
 })
