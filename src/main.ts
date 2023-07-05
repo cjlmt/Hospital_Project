@@ -4,6 +4,7 @@ import '@/style/reset.scss'
 //引入全局组件
 import HospitalTop from '@/components/hospital_top/index.vue'
 import HospitalBottom from '@/components/hospital_bottom/index.vue'
+import Login from '@/components/login/index.vue'
 //
 import App from '@/App.vue'
 //引入路由插件，用于安装路由器
@@ -22,6 +23,7 @@ const app = createApp(App)
 //声明全局组件
 app.component('HospitalTop', HospitalTop)
 app.component('HospitalBottom', HospitalBottom)
+app.component('Login', Login)
 //应用路由器
 app.use(router)
 // 安装ElementPlus插件

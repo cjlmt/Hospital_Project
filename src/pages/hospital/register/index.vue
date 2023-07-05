@@ -50,7 +50,7 @@
                     <!-- 每一个大科室下的小科室，列表循环渲染 -->
                     <ul>
                         <!-- 直接使用大小科室的编码作为当前渲染项的key值 -->
-                        <li v-for="department in item.children" :key="department.depcode">
+                        <li v-for="department in item.children" :key="department.depcode" @click="showLogin">
                             {{ department.depname }}
                         </li>
                     </ul>
@@ -68,6 +68,11 @@ let hospitalStore = useDetailStore()
 import { ref } from 'vue'
 // 控制科室高亮的响应式数据
 let currentIndex = ref<number>(0)
+//获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
+
+import useUserStore from '../../../store/modules/user'
+//获取仓库对象，也就是存储数据的state
+let userStore = useUserStore()
 // 点击导航项的回调函数
 const changeIndex = (index: number) => {
     currentIndex.value = index
@@ -81,6 +86,10 @@ const changeIndex = (index: number) => {
         // 滚动到位置，默认起始位置
         block: 'start'
     })
+}
+// 点击科室按钮回调
+const showLogin = () => {
+    userStore.visiable = true
 }
 </script>
 
@@ -219,6 +228,11 @@ const changeIndex = (index: number) => {
                         height: 25px;
                         line-height: 25px;
                         color: gray;
+                    }
+
+                    li:hover {
+                        cursor: pointer;
+                        background-color: #f0f2f6;
                     }
                 }
             }
