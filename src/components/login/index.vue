@@ -27,7 +27,8 @@
                             </el-form-item>
                         </el-form>
                         <div class="bottom">
-                            <el-button type="primary" size="default" style="width: 90%;">用户登录</el-button>
+                            <el-button type="primary" size="default" style="width: 90%;"
+                                :disabled="!isPhone || loginParam.code.length < 6" @click="login">用户登录</el-button>
                             <div class="toggle" @click="toggle">
                                 <p>微信扫码登录</p>
                                 <svg t="1688554045398" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -158,6 +159,8 @@ let isPhone = computed(() => {
 })
 // 定义点击获取验证码的回调函数
 const getCode = async () => {
+    // 解决element-plus按钮禁用还能点击的问题
+    if (!isPhone.value || flag.value) return
     flag.value = true
 
     //通知pinia仓库发送请求存储验证码
@@ -179,6 +182,27 @@ const getFlag = (newFlag: boolean) => {
 
 // 不切换组件，全用一个标签
 // let time = ref<string>('')
+
+// 点击用户登录按钮回调
+const login = async () => {
+    // 发起登录请求
+    // 登录请求成功：顶部组件需要展示用户名字、对话框关闭
+    // 登录请求失败：弹出对应登录失败的错误消息
+    try {
+        // 用户登录成功
+        userStore.userLogin(loginParam)
+        // 关闭对话框
+        userStore.visiable = false
+        // 清空收集的表单数据
+        loginParam.code = ''
+        loginParam.phone = ''
+    } catch (error) {
+        ElMessage({
+            type: 'error',
+            message: (error as Error).message
+        })
+    }
+}
 </script>
 
 <script lang="ts">
