@@ -8,13 +8,19 @@
                     <div class="first" v-if="loginToggle">
                         <el-form>
                             <el-form-item>
-                                <el-input placeholder="请输入手机号码" :prefix-icon="User"></el-input>
+                                <el-input placeholder="请输入手机号码" :prefix-icon="User" v-model="loginParam.phone">
+                                    <!-- <template #prefix>
+                                        <el-icon class="el-input__icon">
+                                            <search />
+                                        </el-icon>
+                                    </template> -->
+                                </el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-input placeholder="请输入手机验证码" :prefix-icon="Lock"></el-input>
+                                <el-input placeholder="请输入手机验证码" :prefix-icon="Lock" v-model="loginParam.code"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button>获取验证码</el-button>
+                                <el-button :disabled="!isPhone" @click="getCode">获取验证码</el-button>
                             </el-form-item>
                         </el-form>
                         <div class="bottom">
@@ -111,18 +117,46 @@
 </template>
 
 <script setup lang="ts">
+// 引入图标组件
+import { User, Lock } from '@element-plus/icons-vue'
 //获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
-import { ref } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import useUserStore from '../../store/modules/user'
 //获取仓库对象，也就是存储数据的state
 let userStore = useUserStore()
-// 引入图标组件
-import { User, Lock } from '@element-plus/icons-vue'
+// @ts-ignore
+import { ElMessage } from 'element-plus';
 // 定义响应式数据控制左侧盒子显示哪个模块
-let loginToggle = ref<number>(1)
+let loginToggle = ref<boolean>(true)
+// 获取输入框中的电话号码和验证码等表单数据
+let loginParam = reactive({
+    phone: '', //收集手机号码
+    code: '' //收集验证码
+})
 // 定义切换左侧盒子内容的回调函数
 const toggle = () => {
     loginToggle.value = loginToggle.value ? false : true
+}
+// 计算出当前表单元素手机的内容是否手机号码格式
+let isPhone = computed(() => {
+    //手机号码正则表达式,用两个斜杠包裹
+    const reg = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/
+    // 返回布尔值：真代表手机号码、假代表的即为不是手机号码
+    // 正则表达式对象
+    return reg.test(loginParam.phone)
+})
+// 定义点击获取验证码的回调函数
+const getCode = async () => {
+    //通知pinia仓库发送请求存储验证码
+    try {
+        // 获取验证码成功
+        await userStore.getCode(loginParam.phone)
+        // 组件响应式数据获取到验证码
+        loginParam.code = userStore.code
+    } catch (error) {
+        // 获取验证码失败
+        ElMessage('获取验证码失败')
+    }
 }
 </script>
 
