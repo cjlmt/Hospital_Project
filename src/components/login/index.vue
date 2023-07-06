@@ -6,8 +6,8 @@
                 <!-- 左侧结构：收集号码登录，微信扫一扫登录 -->
                 <div class="left">
                     <div class="first" v-if="loginToggle">
-                        <el-form>
-                            <el-form-item>
+                        <el-form :model="loginParam" :rules="rules" ref="form">
+                            <el-form-item prop="phone">
                                 <el-input placeholder="请输入手机号码" :prefix-icon="User" v-model="loginParam.phone">
                                     <!-- <template #prefix>
                                         <el-icon class="el-input__icon">
@@ -16,7 +16,7 @@
                                     </template> -->
                                 </el-input>
                             </el-form-item>
-                            <el-form-item>
+                            <el-form-item prop="code">
                                 <el-input placeholder="请输入手机验证码" :prefix-icon="Lock" v-model="loginParam.code"></el-input>
                             </el-form-item>
                             <el-form-item>
@@ -28,7 +28,8 @@
                         </el-form>
                         <div class="bottom">
                             <el-button type="primary" size="default" style="width: 90%;"
-                                :disabled="!isPhone || loginParam.code.length < 6" @click="login">用户登录</el-button>
+                                :disabled="!isPhone || loginParam.code.length < 6 || loginParam.code.length > 6"
+                                @click="login">用户登录</el-button>
                             <div class="toggle" @click="toggle">
                                 <p>微信扫码登录</p>
                                 <svg t="1688554045398" class="icon" viewBox="0 0 1024 1024" version="1.1"
@@ -138,6 +139,9 @@ import { ElMessage } from 'element-plus';
 // 控制倒计时组件交叉显示
 let flag = ref<boolean>(false)
 
+// 获取form组件实例
+let form = ref<any>()
+
 // 定义响应式数据控制左侧盒子显示哪个模块
 let loginToggle = ref<boolean>(true)
 // 获取输入框中的电话号码和验证码等表单数据
@@ -188,6 +192,13 @@ const login = async () => {
     // 发起登录请求
     // 登录请求成功：顶部组件需要展示用户名字、对话框关闭
     // 登录请求失败：弹出对应登录失败的错误消息
+
+    //如果表单不符合规定，则不可以发送请求，非常重要
+    // if (!isPhone.value || loginParam.code.length < 6 || loginParam.code.length > 6) return
+
+    // 保证表单校验两项都符合条件
+    await form.value.validate()
+
     try {
         // 用户登录成功
         userStore.userLogin(loginParam)
@@ -202,6 +213,38 @@ const login = async () => {
             message: (error as Error).message
         })
     }
+}
+
+// 自定义校验规则:手机号
+const validatorPhone = (_: any, value: any, callback: any) => {
+    const reg = /^((13[0-9])|(14[5,7])|(15[0-3,5-9])|(17[0,3,5-8])|(18[0-9])|166|198|199|(147))\d{8}$/
+    if (reg.test(value)) {
+        callback()
+    } else {
+        callback(new Error('请输入正确的手机号码'))
+    }
+}
+// 自定义校验规则：验证码
+const validatorCode = (_: any, value: any, callback: any) => {
+    if (/^\d{6}$/.test(value)) {
+        callback()
+    } else {
+        callback(new Error('请输入正确的验证码'))
+    }
+}
+
+// 校验规则
+const rules = {
+    // 手机号码校验规则
+    phone: [
+        // { required: true, message: '手机号码输入有误', trigger: 'change', min: 11, max: 11 }
+        { validator: validatorPhone, trigger: 'change' }
+    ],
+    // 验证码校验规则
+    code: [
+        // { required: true, message: '验证码输入有误', trigger: 'blur', min: 6, max: 6 }
+        { validator: validatorCode, trigger: 'change' }
+    ]
 }
 </script>
 
