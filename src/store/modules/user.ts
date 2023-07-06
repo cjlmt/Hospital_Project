@@ -3,7 +3,7 @@ import { reqCode, reqUserLogin } from '@/api/hospital'
 import { defineStore } from 'pinia'
 import { LoginData, UserInfo, UserLoginResponseData } from '@/api/hospital/type'
 import { UserState } from '../modules/interface/index'
-import { GET_TOKEN, SET_TOKEN } from '@/utils/user'
+import { GET_TOKEN, REMOVE_TOKEN, SET_TOKEN } from '@/utils/user'
 
 const useUserStore = defineStore('User', {
     state: (): UserState => {
@@ -39,6 +39,13 @@ const useUserStore = defineStore('User', {
                 // 返回一个失败的Promise
                 return Promise.reject(new Error(result.message))
             }
+        },
+        // 退出登录方法
+        logout() {
+            this.userInfo = { name: '', token: '' }
+            // 写成{} as UserInfo应该也可以，反正都取不到userInfo.name，也不会报错
+            // 清空本地存储的数据
+            REMOVE_TOKEN()
         }
     },
     getters: {

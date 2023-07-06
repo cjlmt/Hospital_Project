@@ -9,6 +9,7 @@
     <!-- 底部组件 -->
     <HospitalBottom />
     <!-- 登录组件 -->
+    <!-- <Login v-if="userStore.visiable" /> -->
     <Login />
   </div>
 </template>
@@ -24,6 +25,11 @@ onMounted(() => {
     console.log('app组件展示获取的数据', res);
   })
 }) */
+
+
+// import useUserStore from '@/store/modules/user'
+// //获取仓库对象，也就是存储数据的state
+// let userStore = useUserStore()
 </script>
 
 <style scoped lang="scss">

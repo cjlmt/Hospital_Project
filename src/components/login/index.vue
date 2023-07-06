@@ -1,6 +1,6 @@
 <template>
     <div class="login_container">
-        <el-dialog v-model="userStore.visiable" title="用户登录">
+        <el-dialog v-model="userStore.visiable" title="用户登录" @close="close">
             <!-- 对话框身体部分结构 -->
             <div class="content">
                 <!-- 左侧结构：收集号码登录，微信扫一扫登录 -->
@@ -115,7 +115,7 @@
                 </div>
             </div>
             <template #footer>
-                <el-button type="primary">关闭窗口</el-button>
+                <el-button type="primary" @click="closeDialog">关闭窗口</el-button>
             </template>
         </el-dialog>
     </div>
@@ -205,8 +205,8 @@ const login = async () => {
         // 关闭对话框
         userStore.visiable = false
         // 清空收集的表单数据
-        loginParam.code = ''
-        loginParam.phone = ''
+        // loginParam.code = ''
+        // loginParam.phone = ''
     } catch (error) {
         ElMessage({
             type: 'error',
@@ -245,6 +245,25 @@ const rules = {
         // { required: true, message: '验证码输入有误', trigger: 'blur', min: 6, max: 6 }
         { validator: validatorCode, trigger: 'change' }
     ]
+}
+
+// 点击dialog右上角关闭按钮的回调
+const close = () => {
+    // 清空收集的数据
+    // Object.assign(loginParam, { phone: '', code: '' })
+    // 简单方法
+    // loginParam.phone = ''
+    // loginParam.code = ''
+    // 清除上一次校验的结果
+    form.value.resetFields()
+}
+
+// 点击右下角关闭按钮的回调
+const closeDialog = () => {
+    // 首先要关闭窗口
+    userStore.visiable = false
+    // 清空数据和表单校验结果
+    // close()
 }
 </script>
 

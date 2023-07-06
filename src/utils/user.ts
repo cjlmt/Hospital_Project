@@ -7,3 +7,8 @@ export const SET_TOKEN = (userInfo: string) => {
 export const GET_TOKEN = () => {
     return localStorage.getItem('USERINFO')
 }
+
+// 清除本地存储用户相关的数据
+export const REMOVE_TOKEN = () => {
+    localStorage.removeItem('USERINFO')
+}

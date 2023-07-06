@@ -36,7 +36,6 @@
 <script setup lang="ts">
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-import { UserInfo } from '@/api/hospital/type'
 //创建路由器对象
 let $router = useRouter()
 //获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
@@ -53,8 +52,14 @@ const login = () => {
 }
 // 点击退出登录的按钮回调
 const signOut = () => {
-  userStore.userInfo = {} as UserInfo
-  // 并且login组件中手机的表单数据也应该清空
+  // userStore.userInfo = {} as UserInfo
+  // // 清空本地存储，防止刷新又获取登录用户数据
+  // SET_TOKEN("{}")
+
+  // 通知pinia仓库清除用户相关的信息
+  userStore.logout()
+  // 编程式导航路由跳转到首页
+  $router.push({ path: '/home' })
 }
 </script>
 
