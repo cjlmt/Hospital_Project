@@ -20,7 +20,10 @@
                                 <el-input placeholder="请输入手机验证码" :prefix-icon="Lock" v-model="loginParam.code"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button :disabled="!isPhone" @click="getCode">获取验证码</el-button>
+                                <el-button :disabled="!isPhone || flag">
+                                    <CountDown v-if="flag" :flag="flag" @getFlag="getFlag" />
+                                    <span v-else @click="getCode">获取验证码</span>
+                                </el-button>
                             </el-form-item>
                         </el-form>
                         <div class="bottom">
@@ -119,6 +122,10 @@
 <script setup lang="ts">
 // 引入图标组件
 import { User, Lock } from '@element-plus/icons-vue'
+
+// 倒计时二选一组件
+import CountDown from '@/components/countdown/index.vue'
+
 //获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
 import { ref, reactive, computed } from 'vue';
 import useUserStore from '../../store/modules/user'
@@ -126,6 +133,10 @@ import useUserStore from '../../store/modules/user'
 let userStore = useUserStore()
 // @ts-ignore
 import { ElMessage } from 'element-plus';
+
+// 控制倒计时组件交叉显示
+let flag = ref<boolean>(false)
+
 // 定义响应式数据控制左侧盒子显示哪个模块
 let loginToggle = ref<boolean>(true)
 // 获取输入框中的电话号码和验证码等表单数据
@@ -147,6 +158,8 @@ let isPhone = computed(() => {
 })
 // 定义点击获取验证码的回调函数
 const getCode = async () => {
+    flag.value = true
+
     //通知pinia仓库发送请求存储验证码
     try {
         // 获取验证码成功
@@ -158,6 +171,14 @@ const getCode = async () => {
         ElMessage('获取验证码失败')
     }
 }
+
+// 自定义事件，获取子组件修改的flag值
+const getFlag = (newFlag: boolean) => {
+    flag.value = newFlag
+}
+
+// 不切换组件，全用一个标签
+// let time = ref<string>('')
 </script>
 
 <script lang="ts">
