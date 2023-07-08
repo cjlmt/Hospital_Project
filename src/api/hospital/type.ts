@@ -75,3 +75,15 @@ export interface UserInfo {
 export interface UserLoginResponseData extends ResponseData {
     data: UserInfo
 }
+
+//定义微信扫码登录返回的数据的ts类型
+export interface WXLogin {
+    "redirectUri": string,
+    "appid": string,
+    "scope": string,
+    "state": string
+}
+// 定义微信扫码参数接口返回数据的ts类型
+export interface WXLoginResponseData extends ResponseData {
+    data: WXLogin
+}

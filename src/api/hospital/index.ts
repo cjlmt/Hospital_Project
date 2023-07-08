@@ -1,6 +1,6 @@
 //引入二次封装的axios对象，使用它来发送请求
 import request from '@/utils/request'
-import type { HospitalDetailResponseData, DepartmentResponseData, LoginData, UserLoginResponseData } from './type'
+import type { HospitalDetailResponseData, DepartmentResponseData, LoginData, UserLoginResponseData, WXLoginResponseData } from './type'
 //枚举请求地址
 enum API {
     HOSPITALDETAIL_URL = '/hosp/hospital/',
@@ -9,7 +9,9 @@ enum API {
     // 获取验证码接口
     GETUSERCODE_URL = '/sms/send/',
     // 用户登录接口
-    USERLOGIN_URL = '/user/login'
+    USERLOGIN_URL = '/user/login',
+    // 获取微信扫码登录需要参数
+    WXLOGIN_URL = '/user/weixin/getLoginParam/'
 }
 //获取医院详情的接口
 export const reqHospitalDetail = (hoscode: string) => request.get<any, HospitalDetailResponseData>(API.HOSPITALDETAIL_URL + hoscode)
@@ -19,3 +21,6 @@ export const reqHospitalDepartment = (hoscode: string) => request.get<any, Depar
 export const reqCode = (phone: string) => request.get<any, any>(API.GETUSERCODE_URL + phone)
 // 用户登录接口
 export const reqUserLogin = (data: LoginData) => request.post<any, UserLoginResponseData>(API.USERLOGIN_URL, data)
+
+// 获取微信扫码登录生成二维码需要的参数接口请求方法
+export const reqWxLogin = (wxRedirectUri: string) => request.get<any, WXLoginResponseData>(API.WXLOGIN_URL + '?wxRedirectUri=' + wxRedirectUri)

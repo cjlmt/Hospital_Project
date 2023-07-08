@@ -45,13 +45,10 @@
                         </div>
                     </div>
                     <div class="second" v-else>
-                        <h1>微信登录</h1>
-                        <div class="code">
-                            <img src="@/assets/images/code_login_wechat.png">
+                        <div id="login_containser">
+
                         </div>
-                        <p>使用微信扫一扫登录</p>
-                        <p>“尚硅谷”</p>
-                        <div class="phone" @click="toggle">
+                        <div class="phone" @click="toggleToPhone">
                             <h2>手机短信验证码登录</h2>
                             <svg t="1688556672509" class="icon" viewBox="0 0 1024 1024" version="1.1"
                                 xmlns="http://www.w3.org/2000/svg" p-id="8215" width="32" height="32">
@@ -122,6 +119,9 @@
 </template>
 
 <script setup lang="ts">
+import { WXLoginResponseData } from '@/api/hospital/type'
+// 引入wx扫码登录参数请求
+import { reqWxLogin } from '@/api/hospital'
 // 引入图标组件
 import { User, Lock } from '@element-plus/icons-vue'
 
@@ -136,6 +136,7 @@ let userStore = useUserStore()
 // @ts-ignore
 import { ElMessage } from 'element-plus';
 
+
 // 控制倒计时组件交叉显示
 let flag = ref<boolean>(false)
 
@@ -149,9 +150,34 @@ let loginParam = reactive({
     phone: '', //收集手机号码
     code: '' //收集验证码
 })
-// 定义切换左侧盒子内容的回调函数
-const toggle = () => {
+
+// 定义切换左侧盒子内容切换到手机验证码登录的回调函数
+const toggleToPhone = () => {
     loginToggle.value = loginToggle.value ? false : true
+
+}
+// 定义切换左侧盒子内容的回调函数
+const toggle = async () => {
+    loginToggle.value = loginToggle.value ? false : true
+    // 发请求获取微信扫码二维码需要参数
+    // 向尚硅谷的服务器发送请求，获取微信扫码登录页面的参数
+    // 需要携带一个参数，告诉学校服务器用户授权成功以后重定向项目到某一个页面
+    let redirect_URL = encodeURIComponent(window.location.origin + '/wxlogin')
+    let result: WXLoginResponseData = await reqWxLogin(redirect_URL)
+    console.log(result);
+
+    // 生成微信扫码登录二维码页面
+    // @ts-ignore
+    new WxLogin({
+        self_redirect: true,
+        id: "login_containser",
+        appid: result.data.appid,
+        scope: "snsapi_login",
+        redirect_uri: result.data.redirectUri,
+        state: result.data.state,
+        style: "black",
+        href: ""
+    })
 }
 // 计算出当前表单元素手机的内容是否手机号码格式
 let isPhone = computed(() => {
@@ -319,41 +345,13 @@ export default {
             }
 
             .second {
-                height: 420px;
+                height: 450px;
 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
 
-                h1 {
-                    font-size: 20px;
-                    margin-bottom: 20px;
-                }
-
-                .code {
-                    width: 250px;
-                    height: 250px;
-                    border: 1px solid #ccc;
-                    border-radius: 3px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    margin-bottom: 10px;
-
-                    img {
-                        width: 230px;
-                        height: 230px;
-                    }
-                }
-
-                p {
-                    margin: 3px 0;
-                    font-size: 13px;
-                    font-weight: 900;
-                }
-
                 .phone {
-                    margin-top: 35px;
                     font-size: 14px;
                     color: gray;
                     display: flex;
