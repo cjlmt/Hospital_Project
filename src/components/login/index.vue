@@ -5,7 +5,7 @@
             <div class="content">
                 <!-- 左侧结构：收集号码登录，微信扫一扫登录 -->
                 <div class="left">
-                    <div class="first" v-if="loginToggle">
+                    <div class="first" v-show="loginToggle">
                         <el-form :model="loginParam" :rules="rules" ref="form">
                             <el-form-item prop="phone">
                                 <el-input placeholder="请输入手机号码" :prefix-icon="User" v-model="loginParam.phone">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="second" v-else>
+                    <div class="second" v-show="!loginToggle">
                         <div id="login_containser">
 
                         </div>
@@ -129,7 +129,7 @@ import { User, Lock } from '@element-plus/icons-vue'
 import CountDown from '@/components/countdown/index.vue'
 
 //获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import useUserStore from '../../store/modules/user'
 //获取仓库对象，也就是存储数据的state
 let userStore = useUserStore()
@@ -281,7 +281,11 @@ const close = () => {
     // loginParam.phone = ''
     // loginParam.code = ''
     // 清除上一次校验的结果
+    // if (loginToggle.value) {
+    //     form.value.resetFields()
+    // }
     form.value.resetFields()
+    console.log(123);
 }
 
 // 点击右下角关闭按钮的回调
@@ -291,6 +295,13 @@ const closeDialog = () => {
     // 清空数据和表单校验结果
     // close()
 }
+
+// 监听场景的数据
+watch(() => loginToggle.value, (val: boolean) => {
+    if (!val) {
+        userStore.queryState()
+    }
+})
 </script>
 
 <script lang="ts">

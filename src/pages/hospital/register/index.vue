@@ -50,7 +50,7 @@
                     <!-- 每一个大科室下的小科室，列表循环渲染 -->
                     <ul>
                         <!-- 直接使用大小科室的编码作为当前渲染项的key值 -->
-                        <li v-for="department in item.children" :key="department.depcode" @click="showLogin">
+                        <li v-for="department in item.children" :key="department.depcode" @click="showLogin(department)">
                             {{ department.depname }}
                         </li>
                     </ul>
@@ -70,9 +70,17 @@ import { ref } from 'vue'
 let currentIndex = ref<number>(0)
 //获取user仓库的数据visiable，可以控制login组件的对话框显示与隐藏
 
-import useUserStore from '../../../store/modules/user'
+// import useUserStore from '../../../store/modules/user'
 //获取仓库对象，也就是存储数据的state
-let userStore = useUserStore()
+// let userStore = useUserStore()
+
+// 引入路由器和路由函数
+import { useRouter, useRoute } from 'vue-router';
+// 创建路由器对象
+let $router = useRouter()
+// 创建路由对象
+let $route = useRoute()
+
 // 点击导航项的回调函数
 const changeIndex = (index: number) => {
     currentIndex.value = index
@@ -88,8 +96,11 @@ const changeIndex = (index: number) => {
     })
 }
 // 点击科室按钮回调
-const showLogin = () => {
-    userStore.visiable = true
+const showLogin = (item: any) => {
+    // userStore.visiable = true
+    // 点击某一个医院科室按钮，进入到相应的预约挂号详情页面
+    // 跳转到预约挂号详情页面
+    $router.push({ path: '/hospital/register_step1', query: { hoscode: $route.query.hoscode, depcode: item.depcode } })
 }
 </script>
 

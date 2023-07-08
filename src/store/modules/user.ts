@@ -46,6 +46,20 @@ const useUserStore = defineStore('User', {
             // 写成{} as UserInfo应该也可以，反正都取不到userInfo.name，也不会报错
             // 清空本地存储的数据
             REMOVE_TOKEN()
+        },
+        // 在微信扫码登录场景中，查询本地存储是否有数据
+        queryState() {
+            // 开启定时器每隔一段时间问：本地存储是否有用户数据
+            let timer = setInterval(() => {
+                // 本地存储已有数据（扫码成功）
+                if (GET_TOKEN()) {
+                    // 关闭对话框
+                    this.visiable = false
+                    // 拷贝数据
+                    this.userInfo = JSON.parse(GET_TOKEN() as string)
+                    clearInterval(timer)
+                }
+            }, 1000)
         }
     },
     getters: {
