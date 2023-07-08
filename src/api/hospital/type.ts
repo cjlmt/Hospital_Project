@@ -1,3 +1,4 @@
+
 //定义医院详情模块数据的ts类型
 export interface ResponseData {
     code: number,
@@ -86,4 +87,34 @@ export interface WXLogin {
 // 定义微信扫码参数接口返回数据的ts类型
 export interface WXLoginResponseData extends ResponseData {
     data: WXLogin
+}
+
+// 
+export interface WorkData {
+    "workDate": string,
+    "workDateMd": string,
+    "dayOfWeek": string,
+    "docCount": number,
+    "reservedNumber": number,
+    "availableNumber": number,
+    "status": number
+}
+
+export type BookingScheduleList = WorkData[]
+
+export interface BaseMap {
+    "workDateString": string,
+    "releaseTime": string,
+    "bigname": string,
+    "stopTime": string,
+    "depname": string,
+    "hosname": string
+}
+
+export interface HospitalWorkData extends ResponseData {
+    data: {
+        "total": number,
+        "bookingScheduleList": BookingScheduleList,
+        "baseMap": BaseMap
+    }
 }

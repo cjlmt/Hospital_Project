@@ -3,6 +3,8 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 // 利用axios对象的create方法可以再创建一个axios实例，这个axios相对于没封装的原生axios设置了基础路径，设置了拦截器，以后就使用该axios对象发送请求即可
 // import { ElMessage } from 'element-plus'
+// 引入用户相关的仓库
+import useUserStore from '@/store/modules/user'
 
 const request = axios.create({
     //请求的基础路径
@@ -11,6 +13,12 @@ const request = axios.create({
 })
 // 配置请求拦截器，传入一个回调函数
 request.interceptors.request.use((config) => {
+    // 获取用户仓库
+    let userStore = useUserStore()
+    // token：公共参数，如果用户登录了需要携带
+    if (userStore.userInfo.token) {
+        config.headers.token = userStore.userInfo.token
+    }
     return config
 })
 // 配置响应拦截器,有成功的回调还有失败的回调
